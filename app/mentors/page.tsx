@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import Layout from '../../components/Layout';
 import { Card, Button } from '../../components/ui';
@@ -225,7 +226,7 @@ export default function MentorsPage() {
                     {mentor.expertise.map((skill, index) => (
                       <span 
                         key={index}
-                        className="px-2 py-1 bg-mentor bg-opacity-10 text-mentor text-xs rounded-full"
+                        className="px-2 py-1 bg-mentor bg-opacity-10 text-white text-xs rounded-full"
                       >
                         {skill}
                       </span>

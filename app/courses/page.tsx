@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import Layout from '../../components/Layout';
 import { Card, Button } from '../../components/ui';
@@ -219,7 +220,7 @@ export default function CoursesPage() {
                     {course.skills.map((skill, index) => (
                       <span 
                         key={index}
-                        className="px-2 py-1 bg-nextstep-primary bg-opacity-10 text-nextstep-primary text-xs rounded-full"
+                        className="px-2 py-1 bg-nextstep-primary bg-opacity-10 text-white text-xs rounded-full"
                       >
                         {skill}
                       </span>
