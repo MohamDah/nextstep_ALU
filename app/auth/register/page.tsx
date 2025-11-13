@@ -35,9 +35,11 @@ export default function RegisterPage() {
       <div className="max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-nextstep-primary mb-2">
-            NextStep Africa
-          </h1>
+          <Link href={"/"}>
+            <h1 className="text-3xl font-bold text-nextstep-primary mb-2">
+              NextStep Africa
+            </h1>
+          </Link>
           <h2 className="text-xl text-gray-600">
             Join Our Community
           </h2>
@@ -54,7 +56,7 @@ export default function RegisterPage() {
                 {error.message}
               </div>
             )}
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Username
@@ -75,7 +77,7 @@ export default function RegisterPage() {
                 <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
               )}
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Email Address
@@ -96,7 +98,7 @@ export default function RegisterPage() {
                 <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
               )}
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Password
@@ -118,7 +120,7 @@ export default function RegisterPage() {
               )}
               <p className="text-gray-500 text-xs mt-1">Must be at least 6 characters</p>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Confirm Password
@@ -136,7 +138,7 @@ export default function RegisterPage() {
                 <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
               )}
             </div>
-            
+
             {/* Role Selection */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
@@ -167,7 +169,7 @@ export default function RegisterPage() {
                 ))}
               </div>
             </div>
-            
+
             <Button
               type="submit"
               variant="primary"
@@ -179,7 +181,7 @@ export default function RegisterPage() {
               {isPending ? 'Creating account...' : 'Create Account'}
             </Button>
           </form>
-          
+
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Already have an account?{' '}

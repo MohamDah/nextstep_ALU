@@ -38,7 +38,7 @@ export function verifyToken(token: string): JWTPayload | null {
 export async function getCurrentUser(): Promise<JWTPayload | null> {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get('auth-token');
+    const token = cookieStore.get('token'); // Changed from 'auth-token' to 'token'
 
     if (!token) {
       return null;

@@ -24,9 +24,11 @@ export default function LoginPage() {
       <div className="max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-nextstep-primary mb-2">
-            NextStep Africa
-          </h1>
+          <Link href={"/"}>
+            <h1 className="text-3xl font-bold text-nextstep-primary mb-2">
+              NextStep Africa
+            </h1>
+          </Link>
           <h2 className="text-xl text-gray-600">
             Welcome Back
           </h2>
@@ -43,7 +45,7 @@ export default function LoginPage() {
                 {error.message}
               </div>
             )}
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Email Address
@@ -64,7 +66,7 @@ export default function LoginPage() {
                 <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
               )}
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Password
@@ -85,7 +87,7 @@ export default function LoginPage() {
                 <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
               )}
             </div>
-            
+
             <Button
               type="submit"
               variant="primary"
@@ -97,7 +99,7 @@ export default function LoginPage() {
               {isPending ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
-          
+
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Don&apos;t have an account?{' '}

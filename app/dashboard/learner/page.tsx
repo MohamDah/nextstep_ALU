@@ -1,7 +1,10 @@
+'use client';
+
 import Layout from '../../../components/Layout';
 import { Card, Button } from '../../../components/ui';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
-export default function LearnerDashboard() {
+function LearnerDashboardContent() {
   // Mock data for demo
   const learnerStats = {
     enrolledCourses: 3,
@@ -141,5 +144,13 @@ export default function LearnerDashboard() {
         </div>
       </div>
     </Layout>
+  );
+}
+
+export default function LearnerDashboard() {
+  return (
+    <ProtectedRoute requiredRole="learner">
+      <LearnerDashboardContent />
+    </ProtectedRoute>
   );
 }

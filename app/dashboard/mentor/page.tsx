@@ -1,8 +1,11 @@
+'use client';
+
 import React from 'react';
 import Layout from '../../../components/Layout';
 import { Card, Button } from '../../../components/ui';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
-export default function MentorDashboard() {
+function MentorDashboardContent() {
   // Mock data for demo
   const mentorStats = {
     activeMentees: 8,
@@ -185,5 +188,13 @@ export default function MentorDashboard() {
         </div>
       </div>
     </Layout>
+  );
+}
+
+export default function MentorDashboard() {
+  return (
+    <ProtectedRoute requiredRole="mentor">
+      <MentorDashboardContent />
+    </ProtectedRoute>
   );
 }

@@ -1,7 +1,10 @@
+'use client';
+
 import Layout from '../../../components/Layout';
 import { Card, Button } from '../../../components/ui';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
-export default function AdminDashboard() {
+function AdminDashboardContent() {
   // Mock data for demo
   const systemStats = {
     totalUsers: 1248,
@@ -176,5 +179,13 @@ export default function AdminDashboard() {
         </div>
       </div>
     </Layout>
+  );
+}
+
+export default function AdminDashboard() {
+  return (
+    <ProtectedRoute requiredRole="admin">
+      <AdminDashboardContent />
+    </ProtectedRoute>
   );
 }

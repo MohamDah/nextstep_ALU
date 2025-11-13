@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import { useLogout, useUser } from '@/hooks/useAuth';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -27,21 +30,17 @@ const Layout: React.FC<LayoutProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-nextstep-primary">
-                NextStep Africa
-              </h1>
+              <Link href={"/"}>
+                <h1 className="text-2xl font-bold text-nextstep-primary">
+                  NextStep Africa
+                </h1>
+              </Link>
               {title !== 'NextStep Africa' && (
                 <span className="text-gray-500 ml-2">- {title}</span>
               )}
             </div>
-            
-            {userRole && (
-              <div className="flex items-center space-x-4">
-                <span className={`px-3 py-1 rounded-full text-white text-sm font-medium ${roleColors[userRole]}`}>
-                  {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
-                </span>
-              </div>
-            )}
+
+            <UserSection userRole={userRole} roleColors={roleColors} />
           </div>
         </div>
       </header>
@@ -91,5 +90,38 @@ const Layout: React.FC<LayoutProps> = ({
     </div>
   );
 };
+
+function UserSection({ userRole, roleColors }: { userRole?: string; roleColors: Record<string, string> }) {
+  const { data: user } = useUser();
+  const { mutate: logout, isPending } = useLogout();
+
+  if (!user && !userRole) {
+    return null;
+  }
+
+  const displayRole = userRole || user?.role;
+
+  return (
+    <div className="flex items-center space-x-4">
+      {displayRole && (
+        <span className={`px-3 py-1 rounded-full text-white text-sm font-medium ${roleColors[displayRole as keyof typeof roleColors]}`}>
+          {displayRole.charAt(0).toUpperCase() + displayRole.slice(1)}
+        </span>
+      )}
+      {user && (
+        <>
+          <span className="text-sm text-gray-600">{user.username}</span>
+          <button
+            onClick={() => logout()}
+            disabled={isPending}
+            className="text-sm text-red-600 hover:text-red-800 font-medium disabled:opacity-50"
+          >
+            {isPending ? 'Logging out...' : 'Logout'}
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
 
 export default Layout;

@@ -1,9 +1,12 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Layout from '../components/Layout';
 import { Card, Button } from '../components/ui';
 
 export default function Home() {
+  // Middleware handles redirect for authenticated users
   const features = [
     {
       title: 'Offline-First Learning',
