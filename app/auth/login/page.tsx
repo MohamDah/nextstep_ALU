@@ -1,54 +1,22 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { Button, Card, Input } from '../../../components/ui';
+import { useForm } from 'react-hook-form';
+import { Button, Card } from '../../../components/ui';
+import { useLogin } from '@/hooks/useAuth';
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
 
 export default function LoginPage() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>();
+  const { mutate: login, isPending, error } = useLogin();
 
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Simple validation
-    const newErrors: { [key: string]: string } = {};
-    
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-    
-    // For demo purposes, we'll just redirect to dashboard
-    // In a real app, you'd authenticate with a backend
-    alert('Login successful! (This is a demo)');
-    window.location.href = '/dashboard/learner';
+  const onSubmit = (data: LoginFormData) => {
+    login(data);
   };
 
   return (
@@ -69,28 +37,54 @@ export default function LoginPage() {
 
         {/* Login Form */}
         <Card className="shadow-lg">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              label="Email Address"
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              error={errors.email}
-              placeholder="Enter your email"
-              fullWidth
-            />
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                {error.message}
+              </div>
+            )}
             
-            <Input
-              label="Password"
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              error={errors.password}
-              placeholder="Enter your password"
-              fullWidth
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email Address
+              </label>
+              <input
+                type="email"
+                {...register('email', {
+                  required: 'Email is required',
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: 'Please enter a valid email'
+                  }
+                })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-nextstep-primary"
+                placeholder="Enter your email"
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+              )}
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Password
+              </label>
+              <input
+                type="password"
+                {...register('password', {
+                  required: 'Password is required',
+                  minLength: {
+                    value: 6,
+                    message: 'Password must be at least 6 characters'
+                  }
+                })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-nextstep-primary"
+                placeholder="Enter your password"
+              />
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+              )}
+            </div>
             
             <Button
               type="submit"
@@ -98,8 +92,9 @@ export default function LoginPage() {
               size="lg"
               fullWidth
               className="mt-6"
+              disabled={isPending}
             >
-              Sign In
+              {isPending ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
           
@@ -110,37 +105,6 @@ export default function LoginPage() {
                 Register here
               </Link>
             </p>
-          </div>
-        </Card>
-
-        {/* Demo Login Options */}
-        <Card className="mt-6" padding="sm">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Demo Access:</h3>
-          <div className="space-y-2">
-            <Button
-              variant="learner"
-              size="sm"
-              fullWidth
-              onClick={() => window.location.href = '/dashboard/learner'}
-            >
-              Login as Learner
-            </Button>
-            <Button
-              variant="mentor"
-              size="sm"
-              fullWidth
-              onClick={() => window.location.href = '/dashboard/mentor'}
-            >
-              Login as Mentor
-            </Button>
-            <Button
-              variant="admin"
-              size="sm"
-              fullWidth
-              onClick={() => window.location.href = '/dashboard/admin'}
-            >
-              Login as Administrator
-            </Button>
           </div>
         </Card>
       </div>

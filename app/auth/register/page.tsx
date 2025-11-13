@@ -1,75 +1,33 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { Button, Card, Input } from '../../../components/ui';
+import { useForm } from 'react-hook-form';
+import { Button, Card } from '../../../components/ui';
+import { useRegister } from '@/hooks/useAuth';
+
+interface RegisterFormData {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  role: 'learner' | 'mentor' | 'admin';
+}
 
 export default function RegisterPage() {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    role: 'learner' as 'learner' | 'mentor' | 'admin',
+  const { register, handleSubmit, formState: { errors }, watch } = useForm<RegisterFormData>({
+    defaultValues: {
+      role: 'learner',
+    },
   });
+  const { mutate: registerUser, isPending, error } = useRegister();
 
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const password = watch('password');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Simple validation
-    const newErrors: { [key: string]: string } = {};
-    
-    if (!formData.username) {
-      newErrors.username = 'Username is required';
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
-    }
-    
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-    
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-    
-    // For demo purposes, we'll just redirect to dashboard
-    // In a real app, you'd register with a backend
-    alert(`Registration successful! Welcome ${formData.username}! (This is a demo)`);
-    window.location.href = `/dashboard/${formData.role}`;
-  };
-
-  const roleDescriptions = {
-    learner: 'Access courses, connect with mentors, and earn certificates',
-    mentor: 'Guide learners, share expertise, and build community',
-    admin: 'Manage platform content, users, and system operations',
+  const onSubmit = (data: RegisterFormData) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { confirmPassword, ...registerData } = data;
+    registerUser(registerData);
   };
 
   return (
@@ -90,51 +48,94 @@ export default function RegisterPage() {
 
         {/* Registration Form */}
         <Card className="shadow-lg">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              label="Username"
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              error={errors.username}
-              placeholder="Choose a username"
-              fullWidth
-            />
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                {error.message}
+              </div>
+            )}
             
-            <Input
-              label="Email Address"
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              error={errors.email}
-              placeholder="Enter your email"
-              fullWidth
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Username
+              </label>
+              <input
+                type="text"
+                {...register('username', {
+                  required: 'Username is required',
+                  minLength: {
+                    value: 3,
+                    message: 'Username must be at least 3 characters'
+                  }
+                })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-nextstep-primary"
+                placeholder="Choose a username"
+              />
+              {errors.username && (
+                <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
+              )}
+            </div>
             
-            <Input
-              label="Password"
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              error={errors.password}
-              placeholder="Create a password"
-              helperText="Must be at least 6 characters"
-              fullWidth
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email Address
+              </label>
+              <input
+                type="email"
+                {...register('email', {
+                  required: 'Email is required',
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: 'Please enter a valid email'
+                  }
+                })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-nextstep-primary"
+                placeholder="Enter your email"
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+              )}
+            </div>
             
-            <Input
-              label="Confirm Password"
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              error={errors.confirmPassword}
-              placeholder="Confirm your password"
-              fullWidth
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Password
+              </label>
+              <input
+                type="password"
+                {...register('password', {
+                  required: 'Password is required',
+                  minLength: {
+                    value: 6,
+                    message: 'Password must be at least 6 characters'
+                  }
+                })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-nextstep-primary"
+                placeholder="Create a password"
+              />
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+              )}
+              <p className="text-gray-500 text-xs mt-1">Must be at least 6 characters</p>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                {...register('confirmPassword', {
+                  required: 'Please confirm your password',
+                  validate: (value) => value === password || 'Passwords do not match'
+                })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-nextstep-primary"
+                placeholder="Confirm your password"
+              />
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
+              )}
+            </div>
             
             {/* Role Selection */}
             <div className="space-y-2">
@@ -142,22 +143,24 @@ export default function RegisterPage() {
                 Choose Your Role
               </label>
               <div className="space-y-2">
-                {(['learner', 'mentor', 'admin'] as const).map((role) => (
-                  <label key={role} className="flex items-start space-x-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                {[
+                  { value: 'learner', label: 'Learner', desc: 'Access courses, connect with mentors, and earn certificates' },
+                  { value: 'mentor', label: 'Mentor', desc: 'Guide learners, share expertise, and build community' },
+                  { value: 'admin', label: 'Administrator', desc: 'Manage platform content, users, and system operations' },
+                ].map((role) => (
+                  <label key={role.value} className="flex items-start space-x-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                     <input
                       type="radio"
-                      name="role"
-                      value={role}
-                      checked={formData.role === role}
-                      onChange={handleChange}
+                      value={role.value}
+                      {...register('role')}
                       className="mt-1"
                     />
                     <div>
-                      <div className="font-medium text-gray-900 capitalize">
-                        {role}
+                      <div className="font-medium text-gray-900">
+                        {role.label}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {roleDescriptions[role]}
+                        {role.desc}
                       </div>
                     </div>
                   </label>
@@ -171,8 +174,9 @@ export default function RegisterPage() {
               size="lg"
               fullWidth
               className="mt-6"
+              disabled={isPending}
             >
-              Create Account
+              {isPending ? 'Creating account...' : 'Create Account'}
             </Button>
           </form>
           
