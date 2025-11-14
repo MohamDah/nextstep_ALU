@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-interface Course {
+export interface Course {
   _id: string;
   title: string;
   description: string;
@@ -16,6 +16,7 @@ interface Course {
   enrolled: number;
   rating: number;
   price: string;
+  pdfUrl?: string;
 }
 
 interface CoursesParams {

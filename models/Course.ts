@@ -11,6 +11,7 @@ export interface ICourse extends Document {
   category: string;
   skills: string[];
   isOfflineAvailable: boolean;
+  pdfUrl?: string;
   lessons: number;
   enrolled: number;
   rating: number;
@@ -57,6 +58,10 @@ const CourseSchema = new Schema<ICourse>(
     isOfflineAvailable: {
       type: Boolean,
       default: true,
+    },
+    pdfUrl: {
+      type: String,
+      required: false,
     },
     lessons: {
       type: Number,
