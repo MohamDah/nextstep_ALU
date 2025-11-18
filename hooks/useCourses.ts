@@ -3,20 +3,24 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export interface Course {
-  _id: string;
+ _id: string;
   title: string;
   description: string;
   instructor: string;
+  instructorId?: string;
   duration: string;
   level: 'Beginner' | 'Intermediate' | 'Advanced';
   category: string;
   skills: string[];
   isOfflineAvailable: boolean;
+  pdfUrl?: string;
   lessons: number;
   enrolled: number;
   rating: number;
   price: string;
-  pdfUrl?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  enrolledUsers: string[];
 }
 
 interface CoursesParams {

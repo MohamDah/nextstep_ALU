@@ -11,6 +11,17 @@ export interface IEnrollment extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+export interface Enrollment {
+  _id: string;
+  userId: string;
+  courseId: string;
+  progress: number;
+  completed: boolean;
+  enrolledAt: Date;
+  completedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 const EnrollmentSchema = new Schema<IEnrollment>(
   {

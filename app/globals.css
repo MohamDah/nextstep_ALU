@@ -2,28 +2,41 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717; 
-  
+  --foreground: #171717;
+
   /* NextStep Africa Brand Colors */
-  --nextstep-primary: #228B22;          /* Forest Green - representing growth and hope */
-  --nextstep-primary-light: #32CD32;    /* Lime Green - vibrant energy */
-  --nextstep-primary-dark: #006400;     /* Dark Green - stability */
-  
-  --nextstep-secondary: #FF8C00;        /* Dark Orange - warmth and optimism */
-  --nextstep-secondary-light: #FFA500;  /* Orange - African sunset */
-  --nextstep-secondary-dark: #FF6347;   /* Tomato - passion and energy */
-  
+  --nextstep-primary: #228B22;
+  /* Forest Green - representing growth and hope */
+  --nextstep-primary-light: #32CD32;
+  /* Lime Green - vibrant energy */
+  --nextstep-primary-dark: #006400;
+  /* Dark Green - stability */
+
+  --nextstep-secondary: #FF8C00;
+  /* Dark Orange - warmth and optimism */
+  --nextstep-secondary-light: #FFA500;
+  /* Orange - African sunset */
+  --nextstep-secondary-dark: #FF6347;
+  /* Tomato - passion and energy */
+
   /* User Role Colors */
-  --learner-color: #4169E1;             /* Royal Blue - learning and growth */
-  --mentor-color: #9932CC;              /* Dark Orchid - wisdom and guidance */
-  --admin-color: #B22222;               /* Fire Brick - authority and control */
-  
+  --learner-color: #4169E1;
+  /* Royal Blue - learning and growth */
+  --mentor-color: #9932CC;
+  /* Dark Orchid - wisdom and guidance */
+  --admin-color: #B22222;
+  /* Fire Brick - authority and control */
+
   /* Semantic Colors */
-  --success: #28A745;                   /* Success green */
-  --warning: #FFC107;                   /* Warning yellow */
-  --error: #DC3545;                     /* Error red */
-  --info: #17A2B8;                      /* Info blue */
-  
+  --success: #28A745;
+  /* Success green */
+  --warning: #FFC107;
+  /* Warning yellow */
+  --error: #DC3545;
+  /* Error red */
+  --info: #17A2B8;
+  /* Info blue */
+
   /* Neutral Colors */
   --gray-50: #F8F9FA;
   --gray-100: #E9ECEF;
@@ -37,27 +50,27 @@
 
 @theme inline {
   --font-poppins: var(--font-poppins);
-  
+
   /* NextStep Africa Color Palette */
   --color-nextstep-primary: var(--nextstep-primary);
   --color-nextstep-primary-light: var(--nextstep-primary-light);
   --color-nextstep-primary-dark: var(--nextstep-primary-dark);
-  
+
   --color-nextstep-secondary: var(--nextstep-secondary);
   --color-nextstep-secondary-light: var(--nextstep-secondary-light);
   --color-nextstep-secondary-dark: var(--nextstep-secondary-dark);
-  
+
   /* User Role Colors */
   --color-learner: var(--learner-color);
   --color-mentor: var(--mentor-color);
   --color-admin: var(--admin-color);
-  
+
   /* Semantic Colors */
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
   --color-info: var(--info);
-  
+
   /* Gray Scale */
   --color-gray-50: var(--gray-50);
   --color-gray-100: var(--gray-100);
@@ -73,4 +86,10 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-poppins);
+}
+
+@layer components {
+  button {
+    cursor: pointer;
+  }
 }

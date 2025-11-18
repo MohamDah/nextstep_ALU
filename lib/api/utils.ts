@@ -51,6 +51,11 @@ export async function getCurrentUser(): Promise<JWTPayload | null> {
   }
 }
 
+export interface ApiResponse<T> {
+  success: boolean
+  data: T
+  message?: string
+}
 /**
  * Create a standardized success response
  */
