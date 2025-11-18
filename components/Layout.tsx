@@ -3,6 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { useLogout, useUser } from '@/hooks/useAuth';
+import logo from '@/public/logo.png'
+import Image from 'next/image';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -22,8 +24,7 @@ const Layout: React.FC<LayoutProps> = ({
     admin: 'bg-admin',
   };
 
-  if (!user) return null
-  const userRole = user.role
+  const userRole = user?.role
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -33,9 +34,7 @@ const Layout: React.FC<LayoutProps> = ({
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <Link href={"/"}>
-                <h1 className="text-2xl font-bold text-nextstep-primary">
-                  NextStep Africa
-                </h1>
+                <Image src={logo} alt='Logo' className='w-36' />
               </Link>
               {title !== 'NextStep Africa' && (
                 <span className="text-gray-500 ml-2">- {title}</span>
