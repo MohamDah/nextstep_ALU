@@ -26,7 +26,7 @@ export default function RootLayout({
         className={`${poppins.variable} ${poppins.className} antialiased`}
       >
         <QueryProvider>
-          <Layout showNavigation={false}>
+          <Layout>
             {children}
           </Layout>
         </QueryProvider>

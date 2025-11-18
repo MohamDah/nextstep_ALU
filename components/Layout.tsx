@@ -9,13 +9,11 @@ import Image from 'next/image';
 interface LayoutProps {
   children: React.ReactNode;
   title?: string;
-  showNavigation?: boolean;
 }
 
 const Layout: React.FC<LayoutProps> = ({
   children,
   title = 'NextStep Africa',
-  showNavigation = true,
 }) => {
   const {data: user} = useUser()
   const roleColors = {
@@ -25,6 +23,8 @@ const Layout: React.FC<LayoutProps> = ({
   };
 
   const userRole = user?.role
+
+  const showNavigation = !!user
 
   return (
     <div className="min-h-screen bg-gray-50">
