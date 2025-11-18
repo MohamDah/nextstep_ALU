@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/providers/query-provider";
 import Layout from "@/components/Layout";
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+const mont = Montserrat({
+  variable: "--font-mont",
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"]
 });
@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.variable} ${poppins.className} antialiased`}
+        className={`${mont.variable} ${mont.className} antialiased`}
       >
         <QueryProvider>
           <Layout>

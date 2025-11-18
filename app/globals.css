@@ -49,7 +49,7 @@
 }
 
 @theme inline {
-  --font-poppins: var(--font-poppins);
+  --font-mont: var(--font-mont);
 
   /* NextStep Africa Color Palette */
   --color-nextstep-primary: var(--nextstep-primary);
@@ -85,7 +85,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-poppins);
+  font-family: var(--font-mont);
 }
 
 @layer components {
