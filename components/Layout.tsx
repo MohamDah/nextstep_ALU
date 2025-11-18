@@ -7,21 +7,23 @@ import { useLogout, useUser } from '@/hooks/useAuth';
 interface LayoutProps {
   children: React.ReactNode;
   title?: string;
-  userRole?: 'learner' | 'mentor' | 'admin';
   showNavigation?: boolean;
 }
 
 const Layout: React.FC<LayoutProps> = ({
   children,
   title = 'NextStep Africa',
-  userRole,
   showNavigation = true,
 }) => {
+  const {data: user} = useUser()
   const roleColors = {
     learner: 'bg-learner',
     mentor: 'bg-mentor',
     admin: 'bg-admin',
   };
+
+  if (!user) return null
+  const userRole = user.role
 
   return (
     <div className="min-h-screen bg-gray-50">

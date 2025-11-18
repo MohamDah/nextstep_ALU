@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Layout from '../../components/Layout';
 import { Card } from '../../components/ui';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useCourses } from '@/hooks/useCourses';
@@ -22,7 +21,6 @@ function CoursesContent() {
   const levels = ['All', 'Beginner', 'Intermediate', 'Advanced'];
 
   return (
-    <Layout title="Browse Courses">
       <div className="space-y-6">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900">Discover Courses</h1>
@@ -102,7 +100,6 @@ function CoursesContent() {
           </div>
         )}
       </div>
-    </Layout>
   );
 }
 

@@ -22,6 +22,7 @@ export default function RegisterPage() {
   });
   const { mutate: registerUser, isPending, error } = useRegister();
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const password = watch('password');
 
   const onSubmit = (data: RegisterFormData) => {

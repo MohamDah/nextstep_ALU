@@ -1,6 +1,4 @@
 "use client"
-import React from 'react';
-import Layout from '../../components/Layout';
 import { Card, Button } from '../../components/ui';
 
 export default function CertificatesPage() {
@@ -65,7 +63,6 @@ export default function CertificatesPage() {
   };
 
   return (
-    <Layout title="My Certificates" userRole="learner">
       <div className="space-y-6">
         {/* Header */}
         <div className="text-center space-y-4">
@@ -301,6 +298,5 @@ export default function CertificatesPage() {
           </div>
         </Card>
       </div>
-    </Layout>
   );
 }

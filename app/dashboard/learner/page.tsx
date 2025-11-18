@@ -1,6 +1,5 @@
 'use client';
 
-import Layout from '../../../components/Layout';
 import { Card, Button } from '../../../components/ui';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
@@ -45,12 +44,11 @@ function LearnerDashboardContent() {
   ];
 
   return (
-    <Layout title="Learner Dashboard" userRole="learner">
       <div className="space-y-6">
         {/* Welcome Section */}
         <div className="bg-linear-to-r from-nextstep-primary to-nextstep-primary-light text-white rounded-lg p-6">
           <h1 className="text-2xl font-bold mb-2">Welcome back, Learner!</h1>
-          <p className="text-nextstep-primary-light">
+          <p>
             Continue your journey to digital excellence. Your next opportunity awaits!
           </p>
         </div>
@@ -143,7 +141,6 @@ function LearnerDashboardContent() {
           </div>
         </div>
       </div>
-    </Layout>
   );
 }
 

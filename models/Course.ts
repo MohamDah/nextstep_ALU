@@ -18,6 +18,7 @@ export interface ICourse extends Document {
   price: string;
   createdAt: Date;
   updatedAt: Date;
+  enrolledUsers: string[]; // New field for tracking enrolled users
 }
 
 const CourseSchema = new Schema<ICourse>(
@@ -80,6 +81,10 @@ const CourseSchema = new Schema<ICourse>(
     price: {
       type: String,
       default: 'Free',
+    },
+    enrolledUsers: {
+      type: [String], // Array of user IDs
+      default: [],
     },
   },
   {

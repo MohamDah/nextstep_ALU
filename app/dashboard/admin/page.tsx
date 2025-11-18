@@ -1,6 +1,5 @@
 'use client';
 
-import Layout from '../../../components/Layout';
 import { Card, Button } from '../../../components/ui';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
@@ -36,7 +35,6 @@ function AdminDashboardContent() {
   ];
 
   return (
-    <Layout title="Admin Dashboard" userRole="admin">
       <div className="space-y-6">
         {/* Welcome Section */}
         <div className="bg-linear-to-r from-admin to-red-600 text-white rounded-lg p-6">
@@ -178,7 +176,6 @@ function AdminDashboardContent() {
           </div>
         </div>
       </div>
-    </Layout>
   );
 }
 

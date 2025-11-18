@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Layout from '../../../components/Layout';
 import { Card, Button } from '../../../components/ui';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
@@ -57,7 +56,6 @@ function MentorDashboardContent() {
   ];
 
   return (
-    <Layout title="Mentor Dashboard" userRole="mentor">
       <div className="space-y-6">
         {/* Welcome Section */}
         <div className="bg-linear-to-r from-mentor to-purple-600 text-white rounded-lg p-6">
@@ -187,7 +185,6 @@ function MentorDashboardContent() {
           </div>
         </div>
       </div>
-    </Layout>
   );
 }
 
