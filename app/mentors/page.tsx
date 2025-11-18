@@ -224,7 +224,7 @@ export default function MentorsPage() {
                     {mentor.expertise.map((skill, index) => (
                       <span 
                         key={index}
-                        className="px-2 py-1 bg-mentor bg-opacity-10 text-white text-xs rounded-full"
+                        className="px-2 py-1 bg-mentor/10 text-white text-xs rounded-full"
                       >
                         {skill}
                       </span>
@@ -277,7 +277,7 @@ export default function MentorsPage() {
         )}
 
         {/* How Mentorship Works */}
-        <Card className="bg-nextstep-primary bg-opacity-10 border-nextstep-primary">
+        <Card className="bg-nextstep-primary/10 border-nextstep-primary">
           <div className="text-center space-y-4">
             <h3 className="text-xl font-semibold text-gray-900">How Mentorship Works</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">

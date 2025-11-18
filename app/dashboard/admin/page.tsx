@@ -68,19 +68,19 @@ function AdminDashboardContent() {
         <Card>
           <h2 className="text-xl font-semibold mb-4">User Distribution</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-learner bg-opacity-10 rounded-lg">
+            <div className="text-center p-4 bg-learner/10 rounded-lg">
               <div className="text-2xl font-bold text-learner">{userStats.learners}</div>
               <div className="text-sm text-gray-600">Learners</div>
             </div>
-            <div className="text-center p-4 bg-mentor bg-opacity-10 rounded-lg">
+            <div className="text-center p-4 bg-mentor/10 rounded-lg">
               <div className="text-2xl font-bold text-mentor">{userStats.mentors}</div>
               <div className="text-sm text-gray-600">Mentors</div>
             </div>
-            <div className="text-center p-4 bg-admin bg-opacity-10 rounded-lg">
+            <div className="text-center p-4 bg-admin/10 rounded-lg">
               <div className="text-2xl font-bold text-admin">{userStats.admins}</div>
               <div className="text-sm text-gray-600">Admins</div>
             </div>
-            <div className="text-center p-4 bg-success bg-opacity-10 rounded-lg">
+            <div className="text-center p-4 bg-success/10 rounded-lg">
               <div className="text-2xl font-bold text-success">{userStats.newThisWeek}</div>
               <div className="text-sm text-gray-600">New This Week</div>
             </div>

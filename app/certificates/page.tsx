@@ -141,7 +141,7 @@ export default function CertificatesPage() {
                           {cert.skills.map((skill, index) => (
                             <span 
                               key={index}
-                              className="px-2 py-1 bg-success bg-opacity-10 text-success text-xs rounded-full"
+                              className="px-2 py-1 bg-success/10 text-success text-xs rounded-full"
                             >
                               {skill}
                             </span>
@@ -260,7 +260,7 @@ export default function CertificatesPage() {
         </div>
 
         {/* Certificate Benefits */}
-        <Card className="bg-nextstep-primary bg-opacity-10 border-nextstep-primary">
+        <Card className="bg-nextstep-primary/10 border-nextstep-primary">
           <h3 className="text-xl font-semibold text-gray-900 mb-4">Why NextStep Africa Certificates Matter</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
             <div className="space-y-3">

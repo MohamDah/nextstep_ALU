@@ -122,7 +122,7 @@ export default function CourseDetailPage() {
                   </>
                 ) : (
                   <>
-                    <div className="bg-success bg-opacity-10 text-white px-4 py-2 rounded-lg">
+                    <div className="bg-success/10 text-white px-4 py-2 rounded-lg">
                       ✓ You&apos;re enrolled!
                     </div>
                     <Button variant="primary" fullWidth>
@@ -156,7 +156,7 @@ export default function CourseDetailPage() {
 
         {/* Enrollment Success Modal */}
         {showEnrollmentModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowEnrollmentModal(false)}>
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowEnrollmentModal(false)}>
             <Card className="max-w-md w-full m-4">
               <div className="text-center space-y-4">
                 <div className="text-6xl">🎉</div>
