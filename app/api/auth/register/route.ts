@@ -11,6 +11,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { username, email, password, role = 'learner' } = body;
 
+    if (role === "admin") return apiError('You cannot register as admin')
+      
     // Validation
     if (!username || !email || !password) {
       return apiError('Username, email, and password are required', 400);
@@ -28,6 +30,7 @@ export async function POST(request: NextRequest) {
     if (existingUser) {
       return apiError('User with this email or username already exists', 409);
     }
+
 
     // Create new user
     const user = await User.create({
