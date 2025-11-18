@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import path from 'path';
-import fs from 'fs';
 import connectDB from '@/lib/mongodb';
 import Course from '@/models/Course';
 import { getCurrentUser, apiError } from '@/lib/api/utils';
+import { getBucket } from '@/lib/gcs';
 
 export async function GET(
   request: NextRequest,
@@ -32,22 +31,29 @@ export async function GET(
       return apiError('PDF not available for this course', 404);
     }
 
-    // Get the PDF file path
-    const pdfPath = path.join(process.cwd(), 'public', 'courses', course.pdfUrl);
-
+    const bucket = getBucket()
+    // Get file from GCS
+    const file = bucket.file(course.pdfUrl);
+    
     // Check if file exists
-    if (!fs.existsSync(pdfPath)) {
+    const [exists] = await file.exists();
+    if (!exists) {
       return apiError('PDF file not found', 404);
     }
 
-    // Read the file
-    const fileBuffer = fs.readFileSync(pdfPath);
+    // Download file content
+    const [fileBuffer] = await file.download();
+
+    // Get metadata
+    const [metadata] = await file.getMetadata();
 
     // Return the PDF file
-    return new NextResponse(fileBuffer, {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return new NextResponse(fileBuffer as any, {
       headers: {
-        'Content-Type': 'application/pdf',
+        'Content-Type': metadata.contentType || 'application/pdf',
         'Content-Disposition': `attachment; filename="${course.title.replace(/[^a-z0-9]/gi, '_')}.pdf"`,
+        'Content-Length': metadata.size?.toString() || '',
       },
     });
   } catch (error: unknown) {

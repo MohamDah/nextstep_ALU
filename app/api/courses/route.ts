@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Course from '@/models/Course';
-import { apiResponse, apiError } from '@/lib/api/utils';
+import { apiResponse, apiError, getCurrentUser } from '@/lib/api/utils';
 
 /**
  * GET /api/courses - Get all courses with optional filters
@@ -51,11 +51,32 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return apiError('Not authenticated', 401);
+    }
+
+    if (user.role !== 'admin') {
+      return apiError('Admin access required', 403);
+    }
+
     await connectDB();
 
     const body = await request.json();
 
-    const course = await Course.create(body);
+    // Validate required fields
+    const requiredFields = ['title', 'description', 'instructor', 'duration', 'category'];
+    for (const field of requiredFields) {
+      if (!body[field]) {
+        return apiError(`${field} is required`, 400);
+      }
+    }
+
+    const course = await Course.create({
+      ...body,
+      instructorId: user.userId,
+    });
 
     return apiResponse(course, 201, 'Course created successfully');
   } catch (error: unknown) {

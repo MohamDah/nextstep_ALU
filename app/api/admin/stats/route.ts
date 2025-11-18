@@ -151,9 +151,7 @@ export async function GET() {
       })),
       recentActivities: activities
     };
-
-    console.log(stats)
-
+    
     return apiResponse(stats);
   } catch (error) {
     console.error('Admin stats error:', error);

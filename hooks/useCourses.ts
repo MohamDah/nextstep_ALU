@@ -35,6 +35,20 @@ interface ApiResponse<T> {
   data: T;
 }
 
+interface CreateCourseData {
+  title: string;
+  description: string;
+  instructor: string;
+  duration: string;
+  level: 'Beginner' | 'Intermediate' | 'Advanced';
+  category: string;
+  skills: string[];
+  isOfflineAvailable: boolean;
+  pdfUrl?: string;
+  lessons: number;
+  price: string;
+}
+
 /**
  * Fetch all courses with optional filters
  */
@@ -89,7 +103,7 @@ export function useCreateCourse() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (courseData: Partial<Course>) => {
+    mutationFn: async (courseData: CreateCourseData) => {
       const res = await fetch('/api/courses', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

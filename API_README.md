@@ -146,8 +146,28 @@ Content-Type: application/json
   "category": "Programming",
   "skills": ["HTML", "CSS", "JavaScript"],
   "isOfflineAvailable": true,
+  "pdfUrl": "filename.pdf",
   "lessons": 32,
   "price": "Free"
+}
+```
+
+**Upload Course PDF** (Admin only)
+```http
+POST /api/upload
+Content-Type: multipart/form-data
+
+file: [PDF file]
+```
+
+Response:
+```json
+{
+  "success": true,
+  "data": {
+    "filename": "1234567890_course.pdf",
+    "url": "/courses/1234567890_course.pdf"
+  }
 }
 ```
 

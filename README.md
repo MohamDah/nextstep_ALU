@@ -34,3 +34,27 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Prerequisites
+
+- Node.js 18+ installed
+- MongoDB (local or Atlas)
+- Google Cloud Storage bucket (for file uploads)
+- pnpm (or npm/yarn)
+
+## Environment Setup
+
+Required environment variables:
+
+```env
+MONGODB_URI=your-mongodb-connection-string
+JWT_SECRET=your-jwt-secret
+
+# Google Cloud Storage
+GCP_PROJECT_ID=your-project-id
+GCS_BUCKET_NAME=your-bucket-name
+GCS_CLIENT_EMAIL=service-account@project.iam.gserviceaccount.com
+GCS_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+```
+
+See `SETUP_GUIDE.md` for detailed setup instructions.

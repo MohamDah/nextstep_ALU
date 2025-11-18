@@ -3,6 +3,7 @@
 import { Card, Button } from '../../../components/ui';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAdminStats } from '@/hooks/useAdmin';
+import Link from 'next/link';
 
 function AdminDashboardContent() {
   const { data: stats, isLoading, error } = useAdminStats();
@@ -141,10 +142,12 @@ function AdminDashboardContent() {
 
           <Card>
             <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
-            <div className="space-y-3">
-              <Button variant="primary" fullWidth>
-                Add New Course
-              </Button>
+            <div className="flex flex-col gap-3">
+              <Link href="/dashboard/admin/new-course">
+                <Button variant="primary" fullWidth>
+                  Add New Course
+                </Button>
+              </Link>
               <Button variant="secondary" fullWidth>
                 Manage Users
               </Button>
