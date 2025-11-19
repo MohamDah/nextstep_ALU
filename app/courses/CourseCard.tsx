@@ -66,7 +66,7 @@ export default function CourseCard({ course }: { course: Course }) {
         <Link href={`/courses/${course._id}`}>
           <Button variant="primary" fullWidth>View Course</Button>
         </Link>
-        {course.isOfflineAvailable && course.pdfUrl && (
+        {course.pdfUrl && isEnrolled && (
           <Button variant="secondary" fullWidth onClick={() => handleDownload(course._id, course.title)}>
             Download PDF
           </Button>
