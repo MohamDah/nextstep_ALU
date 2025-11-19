@@ -6,6 +6,8 @@ import { Card, Button } from '../../../components/ui';
 import { useCourse } from '@/hooks/useCourses';
 import { useEnrollments } from '@/hooks/useEnrollments';
 import { useEnrollMutation } from '@/hooks/mutations/useEnroll';
+import { Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
+import { handleDownload } from '@/lib/api/handleDownload';
 
 export default function CourseDetailPage() {
   const params = useParams();
@@ -13,20 +15,23 @@ export default function CourseDetailPage() {
 
   const { data: course, isLoading, error } = useCourse(courseId as string);
   const { data: enrollments } = useEnrollments()
-  const { mutateAsync: enroll } = useEnrollMutation()
+  const { mutateAsync: enroll, isPending: isEnrolling, error: enrollError } = useEnrollMutation()
 
   const [showEnrollmentModal, setShowEnrollmentModal] = useState(false);
+  const [localEnrollError, setLocalEnrollError] = useState<string | null>(null);
 
   const enrollment = enrollments?.find(i => i.courseId === courseId)
   const isEnrolled = !!enrollment
 
   const handleEnroll = async () => {
     try {
+      setLocalEnrollError(null);
       await enroll({ courseId: courseId as string });
       setShowEnrollmentModal(true);
     } catch (error) {
       console.error('Enrollment failed:', error);
-      alert('Failed to enroll in the course. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to enroll in the course. Please try again.';
+      setLocalEnrollError(errorMessage);
     }
   };
 
@@ -106,13 +111,33 @@ export default function CourseDetailPage() {
             <div className="text-center space-y-4">
               <div className="text-3xl font-bold text-nextstep-primary">{course.price}</div>
 
+              {/* Enrollment Error */}
+              {(enrollError || localEnrollError) && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-sm">
+                  {localEnrollError || (enrollError instanceof Error ? enrollError.message : 'Enrollment failed')}
+                </div>
+              )}
+
               {!isEnrolled ? (
                 <>
-                  <Button variant="primary" size="lg" fullWidth onClick={handleEnroll}>
-                    Enroll Now
-                  </Button>
-                  <Button variant="secondary" fullWidth>
-                    Preview Course
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    fullWidth
+                    onClick={handleEnroll}
+                    disabled={isEnrolling}
+                  >
+                    {isEnrolling ? (
+                      <span className="flex items-center justify-center">
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Enrolling...
+                      </span>
+                    ) : (
+                      'Enroll Now'
+                    )}
                   </Button>
                 </>
               ) : (
@@ -123,7 +148,7 @@ export default function CourseDetailPage() {
                   <Button variant="primary" fullWidth>
                     Continue Learning
                   </Button>
-                  <Button variant="secondary" fullWidth>
+                  <Button variant="secondary" fullWidth onClick={() => handleDownload(course._id, course.title)}>
                     Download for Offline
                   </Button>
                 </>
@@ -150,27 +175,33 @@ export default function CourseDetailPage() {
       </Card>
 
       {/* Enrollment Success Modal */}
-      {showEnrollmentModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowEnrollmentModal(false)}>
-          <Card className="max-w-md w-full m-4">
-            <div className="text-center space-y-4">
-              <div className="text-6xl">🎉</div>
-              <h3 className="text-xl font-semibold">Welcome to the Course!</h3>
-              <p className="text-gray-600">
-                You&apos;ve successfully enrolled in {course.title}. Start learning right away or download for offline access.
-              </p>
-              <div className="space-y-2">
-                <Button variant="primary" fullWidth onClick={() => setShowEnrollmentModal(false)}>
-                  Start Learning Now
-                </Button>
-                <Button variant="secondary" fullWidth onClick={() => setShowEnrollmentModal(false)}>
-                  Download for Offline
-                </Button>
+      <Dialog
+        open={showEnrollmentModal}
+        onClose={() => setShowEnrollmentModal(false)}
+        className="relative z-50"
+      >
+        <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
+          <DialogPanel>
+            <Card className="max-w-md w-full m-4">
+              <div className="text-center space-y-4">
+                <div className="text-6xl">🎉</div>
+                <DialogTitle className="text-xl font-semibold">Welcome to the Course!</DialogTitle>
+                <Description className="text-gray-600">
+                  You&apos;ve successfully enrolled in {course.title}. Start learning right away or download for offline access.
+                </Description>
+                <div className="space-y-2">
+                  <Button variant="primary" fullWidth onClick={() => setShowEnrollmentModal(false)}>
+                    Start Learning Now
+                  </Button>
+                  <Button variant="secondary" fullWidth onClick={() => handleDownload(course._id, course.title)}>
+                    Download for Offline
+                  </Button>
+                </div>
               </div>
-            </div>
-          </Card>
+            </Card>
+          </DialogPanel>
         </div>
-      )}
+      </Dialog>
     </div>
   );
 }
