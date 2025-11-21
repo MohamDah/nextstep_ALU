@@ -9,6 +9,8 @@ import { useEnrollMutation } from '@/hooks/mutations/useEnroll';
 import { Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { handleDownload } from '@/lib/api/handleDownload';
 import CourseProgress from './_components/CourseProgress';
+import { generateCertificate } from '@/lib/generateCertificate';
+import { useUser } from '@/hooks/useAuth';
 
 export default function CourseDetailPage() {
   const params = useParams();
@@ -25,6 +27,12 @@ export default function CourseDetailPage() {
   const enrollment = enrollments?.find(i => i.courseId === courseId)
   const isEnrolled = !!enrollment
 
+  // Calculate progress
+  const completedCount = enrollment?.completedLessons.length || 0;
+  const progressPercentage = course && course.lessons > 0
+    ? Math.round((completedCount / course.lessons) * 100)
+    : 0;
+
   const handleEnroll = async () => {
     try {
       setLocalEnrollError(null);
@@ -35,6 +43,19 @@ export default function CourseDetailPage() {
       const errorMessage = error instanceof Error ? error.message : 'Failed to enroll in the course. Please try again.';
       setLocalEnrollError(errorMessage);
     }
+  };
+
+  const { data: user } = useUser();
+
+  const handleCertificate = () => {
+    if (!course || !user) return;
+
+    generateCertificate({
+      courseTitle: course.title,
+      dateCompleted: new Date().toISOString().split('T')[0],
+      instructorName: course.instructor,
+      learnerName: user.username
+    });
   };
 
   if (isLoading) {
@@ -88,6 +109,48 @@ export default function CourseDetailPage() {
               <span>Certificate included</span>
             </div>
           </div>
+
+          {/* Course Progress (if enrolled) */}
+          {isEnrolled && enrollment && (
+            <Card>
+              <h3 className="text-xl font-semibold mb-4">Your Progress</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-gray-600">
+                    {completedCount} of {course.lessons} lessons completed
+                  </span>
+                  <span className="font-semibold text-nextstep-primary">
+                    {progressPercentage}%
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div
+                    className="bg-nextstep-primary h-3 rounded-full transition-all duration-500"
+                    style={{ width: `${progressPercentage}%` }}
+                  />
+                </div>
+                {progressPercentage === 100 ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2 text-success">
+                      <span>🎉</span>
+                      <span className="font-medium">Course completed!</span>
+                    </div>
+                    <Button
+                      variant="success"
+                      fullWidth
+                      onClick={handleCertificate}
+                    >
+                      📜 Claim Certificate
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="text-sm text-gray-600">
+                    Keep going! You&apos;re making great progress.
+                  </div>
+                )}
+              </div>
+            </Card>
+          )}
 
           {/* What You'll Learn */}
           <Card>

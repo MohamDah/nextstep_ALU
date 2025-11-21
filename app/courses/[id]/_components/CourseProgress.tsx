@@ -5,8 +5,6 @@ import { Dialog, DialogPanel, DialogTitle, Description } from '@headlessui/react
 import { Button } from '@/components/ui';
 import { useState, useEffect } from 'react';
 import { useEnrollments, useUpdateProgress } from '@/hooks/useEnrollments';
-import { generateCertificate } from '@/lib/generateCertificate';
-import { useUser } from '@/hooks/useAuth';
 
 interface CourseProgressProps {
   course: Course;
@@ -23,21 +21,8 @@ export default function CourseProgress({ course, isOpen, onClose }: CourseProgre
   const [lessons, setLessons] = useState<LessonProgress[]>([]);
   const { data: enrollments } = useEnrollments();
   const { mutate: updateProgress, isPending: isSaving } = useUpdateProgress();
-  const { data: user } = useUser()
 
   const enrollment = enrollments?.find(e => e.courseId === course._id);
-
-  const handleCertificate = () => {
-    if (!course || !user) return
-
-    generateCertificate({
-      courseTitle: course.title,
-      dateCompleted: new Date().toISOString().split('T')[0],
-      instructorName: course.instructor,
-      learnerName: user.username
-    })
-  }
-
 
   // Initialize lessons from enrollment data or create new
   useEffect(() => {
@@ -250,29 +235,6 @@ export default function CourseProgress({ course, isOpen, onClose }: CourseProgre
                 );
               })}
             </div>
-
-            {/* Completion Message */}
-            {progressPercentage === 100 && (
-              <div className="mt-6 p-4 bg-green-50 border-2 border-green-200 rounded-lg text-center space-y-4">
-                <div className="text-4xl mb-2">🎉</div>
-                <h4 className="text-lg font-bold text-green-900 mb-1">
-                  Congratulations!
-                </h4>
-                <p className="text-sm text-green-700">
-                  You&apos;ve completed all lessons in this course.
-                  You&apos;re ready to earn your certificate!
-                </p>
-                
-                {/* Certificate Download Button */}
-                <Button
-                  variant="success"
-                  onClick={handleCertificate}
-                  className="mt-3"
-                >
-                  📜 Download Certificate
-                </Button>
-              </div>
-            )}
           </div>
 
           {/* Footer */}
@@ -295,15 +257,6 @@ export default function CourseProgress({ course, isOpen, onClose }: CourseProgre
                 'Save Progress'
               )}
             </Button>
-            {progressPercentage === 100 && (
-              <Button 
-                variant="success" 
-                onClick={handleCertificate}
-                disabled={isSaving}
-              >
-                📜 Certificate
-              </Button>
-            )}
             <Button variant="secondary" onClick={onClose} disabled={isSaving}>
               Close
             </Button>
