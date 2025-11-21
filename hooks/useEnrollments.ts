@@ -1,13 +1,14 @@
 'use client';
 
+import api from '@/lib/axios';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface Enrollment {
   _id: string;
   userId: string;
   courseId: string;
-  progress: number;
-  completed: boolean;
+  completedLessons: number[];
+  status: 'in-progress' | 'completed';
   enrolledAt: string;
   completedAt?: string;
   course?: {
@@ -43,30 +44,48 @@ export function useEnrollments() {
 }
 
 /**
- * Enroll in a course
+ * Fetch single enrollment by ID
  */
-export function useEnroll() {
+export function useEnrollment(enrollmentId: string) {
+  return useQuery<Enrollment>({
+    queryKey: ['enrollment', enrollmentId],
+    queryFn: async () => {
+      const res = await fetch(`/api/enrollments/${enrollmentId}`);
+      
+      if (!res.ok) {
+        throw new Error('Failed to fetch enrollment');
+      }
+      
+      const data: ApiResponse<Enrollment> = await res.json();
+      return data.data;
+    },
+    enabled: !!enrollmentId,
+  });
+}
+
+/**
+ * Update enrollment progress
+ */
+export function useUpdateProgress() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (courseId: string) => {
-      const res = await fetch('/api/enrollments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ courseId }),
-      });
-
-      const result: ApiResponse<Enrollment> = await res.json();
-
-      if (!res.ok) {
-        throw new Error(result.message || 'Failed to enroll');
-      }
+    mutationFn: async ({
+      enrollmentId,
+      completedLessons,
+    }: {
+      enrollmentId: string;
+      completedLessons: number[];
+    }) => {
+      const {data: result} = await api.patch(`/api/enrollments/${enrollmentId}`, { completedLessons });
 
       return result.data;
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      // Invalidate enrollments list
       queryClient.invalidateQueries({ queryKey: ['enrollments'] });
-      queryClient.invalidateQueries({ queryKey: ['courses'] });
+      // Invalidate specific enrollment
+      queryClient.invalidateQueries({ queryKey: ['enrollment', variables.enrollmentId] });
     },
   });
 }

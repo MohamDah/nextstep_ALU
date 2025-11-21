@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Card, Button } from '../../../components/ui';
 import { useCourse } from '@/hooks/useCourses';
@@ -8,6 +8,7 @@ import { useEnrollments } from '@/hooks/useEnrollments';
 import { useEnrollMutation } from '@/hooks/mutations/useEnroll';
 import { Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { handleDownload } from '@/lib/api/handleDownload';
+import CourseProgress from './_components/CourseProgress';
 
 export default function CourseDetailPage() {
   const params = useParams();
@@ -18,6 +19,7 @@ export default function CourseDetailPage() {
   const { mutateAsync: enroll, isPending: isEnrolling, error: enrollError } = useEnrollMutation()
 
   const [showEnrollmentModal, setShowEnrollmentModal] = useState(false);
+  const [showProgressModal, setShowProgressModal] = useState(false);
   const [localEnrollError, setLocalEnrollError] = useState<string | null>(null);
 
   const enrollment = enrollments?.find(i => i.courseId === courseId)
@@ -145,8 +147,12 @@ export default function CourseDetailPage() {
                   <div className="bg-success/10 text-success px-4 py-2 rounded-lg">
                     ✓ You&apos;re enrolled!
                   </div>
-                  <Button variant="primary" fullWidth>
-                    Continue Learning
+                  <Button 
+                    variant="primary" 
+                    fullWidth
+                    onClick={() => setShowProgressModal(true)}
+                  >
+                    Track Progress
                   </Button>
                   <Button variant="secondary" fullWidth onClick={() => handleDownload(course._id, course.title)}>
                     Download for Offline
@@ -202,6 +208,15 @@ export default function CourseDetailPage() {
           </DialogPanel>
         </div>
       </Dialog>
+
+      {/* Course Progress Modal */}
+      {course && (
+        <CourseProgress
+          course={course}
+          isOpen={showProgressModal}
+          onClose={() => setShowProgressModal(false)}
+        />
+      )}
     </div>
   );
 }

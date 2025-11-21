@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import Course from '../models/Course';
 import connectDB from '@/lib/mongodb';
+import Enrollment from '@/models/Enrollment';
 
 
 const seedCourses = async () => {
@@ -38,6 +39,8 @@ const seedCourses = async () => {
   try {
     await connectDB()
 
+    await Enrollment.deleteMany({})
+    return 
     console.log('Clearing existing courses...');
     await Course.deleteMany({});
 

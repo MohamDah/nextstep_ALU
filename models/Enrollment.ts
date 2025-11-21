@@ -4,19 +4,20 @@ export interface IEnrollment extends Document {
   _id: string;
   userId: string;
   courseId: string;
-  progress: number;
-  completed: boolean;
+  completedLessons: number[]; // Array of completed lesson numbers
+  status: 'in-progress' | 'completed';
   enrolledAt: Date;
   completedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
+
 export interface Enrollment {
   _id: string;
   userId: string;
   courseId: string;
-  progress: number;
-  completed: boolean;
+  completedLessons: number[];
+  status: 'in-progress' | 'completed';
   enrolledAt: Date;
   completedAt?: Date;
   createdAt: Date;
@@ -35,15 +36,14 @@ const EnrollmentSchema = new Schema<IEnrollment>(
       required: [true, 'Course ID is required'],
       ref: 'Course',
     },
-    progress: {
-      type: Number,
-      default: 0,
-      min: 0,
-      max: 100,
+    completedLessons: {
+      type: [Number],
+      default: [],
     },
-    completed: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: String,
+      enum: ['in-progress', 'completed'],
+      default: 'in-progress',
     },
     enrolledAt: {
       type: Date,
