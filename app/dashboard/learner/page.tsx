@@ -17,7 +17,6 @@ function LearnerDashboardContent() {
     completedCourses: enrollments?.filter(e => e.status === 'completed').length || 0,
     certificates: enrollments?.filter(e => e.status === 'completed').length || 0,
     hoursLearned: enrollments?.reduce((total, e) => {
-      // Estimate hours based on completed lessons (assuming 1 hour per lesson)
       return total + (e.completedLessons.length || 0);
     }, 0) || 0,
   };
