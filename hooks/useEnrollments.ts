@@ -3,7 +3,7 @@
 import api from '@/lib/axios';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-interface Enrollment {
+export interface Enrollment {
   _id: string;
   userId: string;
   courseId: string;
@@ -15,6 +15,16 @@ interface Enrollment {
     title: string;
     instructor: string;
     duration: string;
+  };
+}
+
+export interface EnrollmentWithCourse extends Enrollment {
+  course?: {
+    _id: string;
+    title: string;
+    instructor: string;
+    duration: string;
+    lessons: number;
   };
 }
 
@@ -38,6 +48,25 @@ export function useEnrollments() {
       }
       
       const data: ApiResponse<Enrollment[]> = await res.json();
+      return data.data;
+    },
+  });
+}
+
+/**
+ * Fetch user's enrollments with course details
+ */
+export function useEnrollmentsWithCourses() {
+  return useQuery<EnrollmentWithCourse[]>({
+    queryKey: ['enrollments', 'with-courses'],
+    queryFn: async () => {
+      const res = await fetch('/api/enrollments?populate=course');
+      
+      if (!res.ok) {
+        throw new Error('Failed to fetch enrollments');
+      }
+      
+      const data: ApiResponse<EnrollmentWithCourse[]> = await res.json();
       return data.data;
     },
   });

@@ -1,41 +1,48 @@
-import connectDB from '@/lib/mongodb';
+import { getCurrentUser, apiError, apiResponse } from '@/lib/api/utils';
+import dbConnect from '@/lib/mongodb';
 import Enrollment from '@/models/Enrollment';
 import Course from '@/models/Course';
-import { getCurrentUser, apiResponse, apiError } from '@/lib/api/utils';
 
-/**
- * GET /api/enrollments - Get user's enrollments
- */
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const currentUser = await getCurrentUser();
+    const user = await getCurrentUser();
 
-    if (!currentUser) {
+    if (!user) {
       return apiError('Not authenticated', 401);
     }
 
-    await connectDB();
+    await dbConnect();
 
-    const enrollments = await Enrollment.find({ userId: currentUser.userId })
-      .sort({ enrolledAt: -1 });
+    const { searchParams } = new URL(request.url);
+    const populate = searchParams.get('populate');
 
-    // Populate course details
-    const enrollmentsWithCourses = await Promise.all(
-      enrollments.map(async (enrollment) => {
-        const course = await Course.findById(enrollment.courseId);
-        return {
-          ...enrollment.toObject(),
-          course,
-        };
-      })
-    );
+    let enrollments;
 
-    return apiResponse(enrollmentsWithCourses);
-  } catch (error: unknown) {
+    if (populate === 'course') {
+      // Fetch enrollments and populate course details
+      enrollments = await Enrollment.find({ userId: user.userId }).lean();
+      
+      // Manually populate course data
+      const enrollmentsWithCourses = await Promise.all(
+        enrollments.map(async (enrollment) => {
+          const course = await Course.findById(enrollment.courseId)
+            .select('_id title instructor duration lessons')
+            .lean();
+          
+          return {
+            ...enrollment,
+            course: course || undefined,
+          };
+        })
+      );
+
+      return apiResponse(enrollmentsWithCourses);
+    } else {
+      enrollments = await Enrollment.find({ userId: user.userId }).lean();
+      return apiResponse(enrollments);
+    }
+  } catch (error) {
     console.error('Get enrollments error:', error);
-    return apiError(
-      error instanceof Error ? error.message : 'Failed to get enrollments',
-      500
-    );
+    return apiError('Failed to fetch enrollments');
   }
 }

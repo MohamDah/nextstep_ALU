@@ -2,39 +2,24 @@
 
 import { Card, Button } from '../../../components/ui';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import { useEnrollmentsWithCourses } from '@/hooks/useEnrollments';
+import { useRouter } from 'next/navigation';
+import MyCourseCard from './_components/MyCourseCard';
 
 function LearnerDashboardContent() {
-  // Mock data for demo
-  const learnerStats = {
-    enrolledCourses: 3,
-    completedCourses: 1,
-    certificates: 1,
-    hoursLearned: 24,
-  };
+  const router = useRouter();
+  const { data: enrollments = [], isLoading, error } = useEnrollmentsWithCourses();
 
-  const enrolledCourses = [
-    {
-      id: 1,
-      title: 'Digital Marketing Fundamentals',
-      progress: 75,
-      nextLesson: 'Social Media Strategy',
-      instructor: 'Sarah Mwangi',
-    },
-    {
-      id: 2,
-      title: 'Web Development Basics',
-      progress: 45,
-      nextLesson: 'HTML & CSS',
-      instructor: 'Ahmed Hassan',
-    },
-    {
-      id: 3,
-      title: 'Mobile App Development',
-      progress: 20,
-      nextLesson: 'Introduction to React Native',
-      instructor: 'Grace Otieno',
-    },
-  ];
+  // Calculate statistics from enrollments
+  const learnerStats = {
+    enrolledCourses: enrollments?.length || 0,
+    completedCourses: enrollments?.filter(e => e.status === 'completed').length || 0,
+    certificates: enrollments?.filter(e => e.status === 'completed').length || 0,
+    hoursLearned: enrollments?.reduce((total, e) => {
+      // Estimate hours based on completed lessons (assuming 1 hour per lesson)
+      return total + (e.completedLessons.length || 0);
+    }, 0) || 0,
+  };
 
   const recentActivities = [
     'Completed lesson: "Introduction to SEO"',
@@ -77,37 +62,46 @@ function LearnerDashboardContent() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>
             <h2 className="text-xl font-semibold mb-4">Your Courses</h2>
-            <div className="space-y-4">
-              {enrolledCourses.map((course) => (
-                <div key={course.id} className="border rounded-lg p-4">
-                  <h3 className="font-medium text-gray-900">{course.title}</h3>
-                  <p className="text-sm text-gray-600">Instructor: {course.instructor}</p>
-                  <div className="mt-2">
-                    <div className="flex justify-between text-sm text-gray-600 mb-1">
-                      <span>Progress</span>
-                      <span>{course.progress}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
-                        className="bg-learner h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${course.progress}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="mt-3 flex justify-between items-center">
-                    <span className="text-sm text-gray-600">
-                      Next: {course.nextLesson}
-                    </span>
-                    <Button variant="learner" size="sm">
-                      Continue
-                    </Button>
-                  </div>
+            
+            {isLoading && (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-nextstep-primary mx-auto mb-2"></div>
+                <p className="text-gray-600 text-sm">Loading your courses...</p>
+              </div>
+            )}
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                Failed to load courses. Please try again.
+              </div>
+            )}
+
+            {!isLoading && !error && enrollments.length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-gray-600 mb-4">You haven&apos;t enrolled in any courses yet.</p>
+                <Button variant="primary" onClick={() => router.push('/courses')}>
+                  Browse Courses
+                </Button>
+              </div>
+            )}
+
+            {!isLoading && !error && enrollments.length > 0 && (
+              <>
+                <div className="space-y-4">
+                  {enrollments.map((enrollment) => (
+                    <MyCourseCard key={enrollment._id} enrollment={enrollment} />
+                  ))}
                 </div>
-              ))}
-            </div>
-            <Button variant="primary" fullWidth className="mt-4">
-              Browse More Courses
-            </Button>
+                <Button 
+                  variant="primary" 
+                  fullWidth 
+                  className="mt-4"
+                  onClick={() => router.push('/courses')}
+                >
+                  Browse More Courses
+                </Button>
+              </>
+            )}
           </Card>
 
           {/* Recent Activity & Quick Actions */}
