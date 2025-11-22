@@ -11,6 +11,8 @@ export interface Enrollment {
   status: 'in-progress' | 'completed';
   enrolledAt: string;
   completedAt?: string;
+  updatedAt?: string;
+  createdAt?: string;
   course?: {
     title: string;
     instructor: string;

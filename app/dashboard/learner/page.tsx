@@ -5,6 +5,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { useEnrollmentsWithCourses } from '@/hooks/useEnrollments';
 import { useRouter } from 'next/navigation';
 import MyCourseCard from './_components/MyCourseCard';
+import { useRecentActivity } from './utils';
 
 function LearnerDashboardContent() {
   const router = useRouter();
@@ -21,12 +22,8 @@ function LearnerDashboardContent() {
     }, 0) || 0,
   };
 
-  const recentActivities = [
-    'Completed lesson: "Introduction to SEO"',
-    'Enrolled in "Mobile App Development"',
-    'Earned certificate for "Basic Computer Skills"',
-    'Connected with mentor: John Kamau',
-  ];
+  // Generate recent activities from enrollments
+  const recentActivities = useRecentActivity(enrollments);
 
   return (
       <div className="space-y-6">
@@ -108,14 +105,24 @@ function LearnerDashboardContent() {
           <div className="space-y-6">
             <Card>
               <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
-              <div className="space-y-3">
-                {recentActivities.map((activity, index) => (
-                  <div key={index} className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-nextstep-primary rounded-full mt-2 shrink-0"></div>
-                    <p className="text-sm text-gray-700">{activity}</p>
-                  </div>
-                ))}
-              </div>
+              {isLoading ? (
+                <div className="text-center py-4">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-nextstep-primary mx-auto"></div>
+                </div>
+              ) : recentActivities.length > 0 ? (
+                <div className="space-y-3">
+                  {recentActivities.map((activity, index) => (
+                    <div key={index} className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-nextstep-primary rounded-full mt-2 shrink-0"></div>
+                      <p className="text-sm text-gray-700">{activity}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500 text-center py-4 text-sm">
+                  No recent activity. Start learning to see your progress here!
+                </p>
+              )}
             </Card>
 
             <Card>
@@ -127,7 +134,6 @@ function LearnerDashboardContent() {
                 <Button 
                   variant="primary" 
                   fullWidth 
-                  className=""
                   onClick={() => router.push('/courses')}
                 >
                   Find a Course
