@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui'
+import { Button, Card } from '@/components/ui'
 import { EnrollmentWithCourse } from '@/hooks/useEnrollments';
 import { useRouter } from 'next/navigation';
 import { generateCertificate } from '@/lib/generateCertificate';
@@ -38,7 +38,7 @@ export default function MyCourseCard({ enrollment }: { enrollment: EnrollmentWit
   };
 
   return (
-    <div className={`border rounded-lg p-4 ${isCompleted ? 'bg-green-50 border-green-200' : ''}`}>
+    <Card className={`border rounded-lg p-4 ${isCompleted ? 'bg-green-50 border-green-200' : ''}`}>
       <div className="flex items-start justify-between">
         <h3 className="font-medium text-gray-900">{course.title}</h3>
         {isCompleted && (
@@ -96,6 +96,6 @@ export default function MyCourseCard({ enrollment }: { enrollment: EnrollmentWit
           </Button>
         </div>
       )}
-    </div>
+    </Card>
   )
 }

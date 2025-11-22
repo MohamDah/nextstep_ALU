@@ -124,11 +124,13 @@ function LearnerDashboardContent() {
                 <Button variant="primary" fullWidth>
                   Find a Mentor
                 </Button>
-                <Button variant="secondary" fullWidth>
-                  Download Courses for Offline
-                </Button>
-                <Button variant="success" fullWidth>
-                  View My Certificates
+                <Button 
+                  variant="primary" 
+                  fullWidth 
+                  className=""
+                  onClick={() => router.push('/courses')}
+                >
+                  Find a Course
                 </Button>
               </div>
             </Card>
