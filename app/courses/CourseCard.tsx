@@ -54,7 +54,7 @@ export default function CourseCard({ course }: { course: Course }) {
           </div>
         </div>
 
-        {course.isOfflineAvailable && (
+        {course.pdfUrl && (
           <div className="inline-flex items-center text-sm text-green-600">
             <span className="mr-1">📱</span>
             Available offline

@@ -174,7 +174,6 @@ export default function CourseDetailPage() {
           {/* Enrollment Card */}
           <Card className="sticky top-4">
             <div className="text-center space-y-4">
-              <div className="text-3xl font-bold text-nextstep-primary">{course.price}</div>
 
               {/* Enrollment Error */}
               {(enrollError || localEnrollError) && (
