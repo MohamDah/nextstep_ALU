@@ -168,31 +168,13 @@ const seedCourses = async () => {
   try {
     await connectDB()
 
+    console.log('Clearing database except users...');
+    await Promise.all([
+      Course.deleteMany({}),
+      Enrollment.deleteMany({}),
+      Conversation.deleteMany({})
+    ]);
 
-    console.log('Clearing existing courses...');
-    await Course.deleteMany({});
-
-    await Enrollment.deleteMany({})
-
-    await Conversation.deleteMany({})
-    
-    // Drop the problematic unique index on conversations
-    console.log('Fixing conversation indexes...');
-    try {
-      const db = mongoose.connection.db;
-      const conversationsCollection = db?.collection('conversations');
-      if (conversationsCollection) {
-        await conversationsCollection.dropIndex('participants_1');
-        console.log('✅ Dropped participants_1 unique index');
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error && 'code' in error && (error as { code: number }).code === 27) {
-        console.log('⚠️  Index participants_1 does not exist (already dropped)');
-      } else {
-        console.log('Note: Could not drop index:', error instanceof Error ? error.message : 'Unknown error');
-      }
-    }
-    
     console.log('Seeding new courses...');
     await Course.insertMany(courses);
 
