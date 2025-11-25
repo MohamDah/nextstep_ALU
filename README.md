@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - Node.js 18+ installed
-- MongoDB installed locally OR MongoDB Atlas account
+- MongoDB Atlas account
 - pnpm (or npm/yarn)
 
 ## Installation Steps
