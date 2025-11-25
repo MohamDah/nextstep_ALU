@@ -265,18 +265,6 @@ function NewCourseContent() {
                 Separate each skill with a comma
               </p>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Price
-              </label>
-              <input
-                type="text"
-                {...register('price')}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-nextstep-primary"
-                placeholder="Free"
-              />
-            </div>
           </div>
 
           {/* Offline Availability */}
