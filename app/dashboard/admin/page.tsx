@@ -103,7 +103,7 @@ function AdminDashboardContent() {
                   </div>
                   <div className="mt-2">
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
+                      <div
                         className="bg-success h-2 rounded-full transition-all duration-300"
                         style={{ width: `${course.completion}%` }}
                       ></div>
@@ -115,9 +115,11 @@ function AdminDashboardContent() {
           ) : (
             <p className="text-gray-500 text-center py-8">No course data available</p>
           )}
-          <Button variant="admin" fullWidth className="mt-4">
-            View All Courses
-          </Button>
+          <Link href="/courses" className="mt-4">
+            <Button variant="admin" fullWidth>
+              View All Courses
+            </Button>
+          </Link>
         </Card>
 
         {/* Recent Activities & Quick Actions */}
@@ -136,9 +138,6 @@ function AdminDashboardContent() {
             ) : (
               <p className="text-gray-500 text-center py-4">No recent activities</p>
             )}
-            <Button variant="admin" fullWidth className="mt-4">
-              View Activity Log
-            </Button>
           </Card>
 
           <Card>
@@ -154,15 +153,6 @@ function AdminDashboardContent() {
                   Manage Admin Users
                 </Button>
               </Link>
-              <Button variant="secondary" fullWidth>
-                Manage Users
-              </Button>
-              <Button variant="warning" fullWidth>
-                System Maintenance
-              </Button>
-              <Button variant="success" fullWidth>
-                Generate Reports
-              </Button>
             </div>
           </Card>
 
