@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         contentType: file.type,
         metadata: {
-          uploadedBy: user.userId,
+          uploadedBy: result.user.id,
           uploadedAt: new Date().toISOString(),
         },
       },

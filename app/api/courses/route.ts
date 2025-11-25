@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Course from '@/models/Course';
-import { apiResponse, apiError, getCurrentUser } from '@/lib/api/utils';
+import { apiResponse, apiError, requireActiveAdmin } from '@/lib/api/utils';
 
 /**
  * GET /api/courses - Get all courses with optional filters
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
 
     const course = await Course.create({
       ...body,
-      instructorId: user.userId,
+      instructorId: result.user.id,
     });
 
     return apiResponse(course, 201, 'Course created successfully');
