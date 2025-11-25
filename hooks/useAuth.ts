@@ -9,6 +9,7 @@ interface User {
   username: string;
   email: string;
   role: 'learner' | 'mentor' | 'admin';
+  status: 'active' | 'pending' | 'rejected';
 }
 
 interface LoginData {

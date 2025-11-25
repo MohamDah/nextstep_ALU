@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
       userId: user._id.toString(),
       email: user.email,
       role: user.role,
+      status: user.status,
     });
 
     // Set cookie
@@ -53,6 +54,7 @@ export async function POST(request: NextRequest) {
           username: user.username,
           email: user.email,
           role: user.role,
+          status: user.status,
         },
         token,
       },

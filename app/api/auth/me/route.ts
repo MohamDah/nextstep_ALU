@@ -18,11 +18,13 @@ export async function GET() {
       return apiError('User not found', 404);
     }
 
+
     return apiResponse({
       id: user._id,
       username: user.username,
       email: user.email,
       role: user.role,
+      status: user.status,
     });
   } catch (error: unknown) {
     console.error('Get current user error:', error);

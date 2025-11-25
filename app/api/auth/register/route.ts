@@ -10,8 +10,6 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const { username, email, password, role = 'learner' } = body;
-
-    if (role === "admin") return apiError('You cannot register as admin')
       
     // Validation
     if (!username || !email || !password) {
@@ -31,6 +29,19 @@ export async function POST(request: NextRequest) {
       return apiError('User with this email or username already exists', 409);
     }
 
+    // Determine status for admin role
+    let status: 'active' | 'pending' | 'rejected' = 'active';
+    
+    if (role === 'admin') {
+      // Check if there are any active admins
+      const activeAdminCount = await User.countDocuments({ 
+        role: 'admin', 
+        status: 'active' 
+      });
+      
+      // If no active admins exist, auto-approve this admin
+      status = activeAdminCount === 0 ? 'active' : 'pending';
+    }
 
     // Create new user
     const user = await User.create({
@@ -38,6 +49,7 @@ export async function POST(request: NextRequest) {
       email,
       password,
       role,
+      status,
     });
 
     // Generate token
@@ -45,6 +57,7 @@ export async function POST(request: NextRequest) {
       userId: user._id.toString(),
       email: user.email,
       role: user.role,
+      status: user.status,
     });
 
     // Set cookie
@@ -63,6 +76,7 @@ export async function POST(request: NextRequest) {
           username: user.username,
           email: user.email,
           role: user.role,
+          status: user.status,
         },
         token,
       },

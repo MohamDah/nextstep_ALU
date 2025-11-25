@@ -1,4 +1,4 @@
-import { getCurrentUser, apiError, apiResponse } from '@/lib/api/utils';
+import { requireActiveAdmin, apiError, apiResponse } from '@/lib/api/utils';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import Course from '@/models/Course';
@@ -6,14 +6,10 @@ import Enrollment from '@/models/Enrollment';
 
 export async function GET() {
   try {
-    const user = await getCurrentUser();
+    const result = await requireActiveAdmin();
 
-    if (!user) {
-      return apiError('Not authenticated', 401);
-    }
-
-    if (user.role !== 'admin') {
-      return apiError('Admin access required', 403);
+    if ('error' in result) {
+      return result.error;
     }
 
     await dbConnect();

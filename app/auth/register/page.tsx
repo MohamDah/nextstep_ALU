@@ -11,7 +11,7 @@ interface RegisterFormData {
   email: string;
   password: string;
   confirmPassword: string;
-  role: 'learner' | 'mentor';
+  role: 'learner' | 'mentor' | 'admin';
 }
 
 export default function RegisterPage() {
@@ -149,6 +149,7 @@ export default function RegisterPage() {
                 {[
                   { value: 'learner', label: 'Learner', desc: 'Access courses, connect with mentors, and earn certificates' },
                   { value: 'mentor', label: 'Mentor', desc: 'Guide learners, share expertise, and build community' },
+                  { value: 'admin', label: 'Admin', desc: 'Manage platform, courses, and users (requires approval)' },
                 ].map((role) => (
                   <label key={role.value} className="flex items-start space-x-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                     <input
@@ -167,6 +168,12 @@ export default function RegisterPage() {
                     </div>
                   </label>
                 ))}
+              </div>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-2">
+                <p className="text-xs text-blue-800">
+                  <strong>Note:</strong> Admin accounts require approval from an existing active admin, 
+                  unless you&apos;re the first admin in the system.
+                </p>
               </div>
             </div>
 

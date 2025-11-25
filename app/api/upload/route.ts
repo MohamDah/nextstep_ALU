@@ -1,17 +1,13 @@
 import { NextRequest } from 'next/server';
-import { getCurrentUser, apiError, apiResponse } from '@/lib/api/utils';
+import { requireActiveAdmin, apiError, apiResponse } from '@/lib/api/utils';
 import { getBucket } from '@/lib/gcs';
 
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const result = await requireActiveAdmin();
 
-    if (!user) {
-      return apiError('Not authenticated', 401);
-    }
-
-    if (user.role !== 'admin') {
-      return apiError('Admin access required', 403);
+    if ('error' in result) {
+      return result.error;
     }
 
     const formData = await request.formData();

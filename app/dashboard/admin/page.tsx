@@ -148,6 +148,11 @@ function AdminDashboardContent() {
                   Add New Course
                 </Button>
               </Link>
+              <Link href="/dashboard/admin/users">
+                <Button variant="admin" fullWidth>
+                  Manage Admin Users
+                </Button>
+              </Link>
               <Button variant="secondary" fullWidth>
                 Manage Users
               </Button>

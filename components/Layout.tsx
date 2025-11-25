@@ -62,6 +62,11 @@ const Layout: React.FC<LayoutProps> = ({
                   Mentors
                 </Link>
               )}
+              {userRole === 'admin' && (
+                <Link href="/dashboard/admin/users" className="px-3 py-4 text-sm font-medium hover:bg-nextstep-primary-dark transition-colors">
+                  Manage Admins
+                </Link>
+              )}
             </div>
           </div>
         </nav>

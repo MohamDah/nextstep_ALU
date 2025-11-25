@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 // Simple JWT payload extraction without verification (for edge runtime)
 // Full verification happens in API routes
-function decodeToken(token: string): { userId: string; email: string; role: string } | null {
+function decodeToken(token: string): { userId: string; email: string; role: string; status: string } | null {
   try {
     const parts = token.split('.');
     if (parts.length !== 3) return null;
@@ -58,6 +58,11 @@ export function middleware(request: NextRequest) {
     // Check role-based access for dashboard routes
     if (pathname.startsWith('/dashboard/')) {
       const role = pathname.split('/')[2]; // Extract role from /dashboard/{role}
+      
+      // Allow access to status pages
+      if (role === 'pending' || role === 'rejected') {
+        return NextResponse.next();
+      }
       
       if (role && role !== user.role) {
         // User trying to access wrong dashboard - redirect to their dashboard

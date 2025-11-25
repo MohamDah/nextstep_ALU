@@ -8,6 +8,7 @@ export interface JWTPayload {
   userId: string;
   email: string;
   role: string;
+  status: string;
 }
 
 /**
@@ -81,4 +82,38 @@ export function apiError(message: string, status = 400): NextResponse {
     },
     { status }
   );
+}
+
+/**
+ * Require an active admin user for protected routes
+ * Returns the user if authorized, or an error response
+ */
+export async function requireActiveAdmin() {
+  const currentUser = await getCurrentUser();
+  
+  if (!currentUser) {
+    return { error: apiError('Not authenticated', 401) };
+  }
+
+  // Import User model dynamically to avoid circular dependencies
+  const { default: User } = await import('@/models/User');
+  const { default: connectDB } = await import('@/lib/mongodb');
+  
+  await connectDB();
+  
+  const user = await User.findById(currentUser.userId).select('-password');
+  
+  if (!user) {
+    return { error: apiError('User not found', 404) };
+  }
+  
+  if (user.role !== 'admin') {
+    return { error: apiError('Admin access required', 403) };
+  }
+  
+  if (user.status !== 'active') {
+    return { error: apiError('Admin account not activated', 403) };
+  }
+  
+  return { user };
 }
