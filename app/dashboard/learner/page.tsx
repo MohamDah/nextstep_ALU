@@ -3,6 +3,7 @@
 import { Card, Button } from '../../../components/ui';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useEnrollmentsWithCourses } from '@/hooks/useEnrollments';
+import { useConversations } from '@/hooks/useConversations';
 import { useRouter } from 'next/navigation';
 import MyCourseCard from './_components/MyCourseCard';
 import { useRecentActivity } from './utils';
@@ -10,6 +11,10 @@ import { useRecentActivity } from './utils';
 function LearnerDashboardContent() {
   const router = useRouter();
   const { data: enrollments = [], isLoading, error } = useEnrollmentsWithCourses();
+  const { data: conversations } = useConversations();
+
+  const activeConversations = conversations?.filter(c => c.status === 'active') || [];
+  const pendingConversations = conversations?.filter(c => c.status === 'pending') || [];
 
   // Calculate statistics from enrollments
   const learnerStats = {
@@ -127,7 +132,11 @@ function LearnerDashboardContent() {
             <Card>
               <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
               <div className="space-y-3">
-                <Button variant="primary" fullWidth>
+                <Button 
+                  variant="mentor" 
+                  fullWidth
+                  onClick={() => router.push('/mentors')}
+                >
                   Find a Mentor
                 </Button>
                 <Button 
@@ -138,6 +147,72 @@ function LearnerDashboardContent() {
                   Find a Course
                 </Button>
               </div>
+            </Card>
+
+            {/* Mentor Conversations */}
+            <Card>
+              <h2 className="text-xl font-semibold mb-4">Mentor Connections</h2>
+              {activeConversations.length === 0 && pendingConversations.length === 0 ? (
+                <div className="text-center py-4">
+                  <p className="text-gray-500 text-sm mb-3">No mentor connections yet</p>
+                  <Button 
+                    variant="mentor" 
+                    size="sm"
+                    onClick={() => router.push('/mentors')}
+                  >
+                    Connect with a Mentor
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {pendingConversations.map((conv) => (
+                    <div key={conv._id} className="border rounded-lg p-3">
+                      <div className="flex justify-between items-start mb-1">
+                        <p className="text-sm font-medium text-gray-900">
+                          {conv.otherParticipant?.username}
+                        </p>
+                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-warning text-gray-800">
+                          Pending
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-600 mb-2">
+                        Waiting for mentor response
+                      </p>
+                      <Button 
+                        variant="secondary" 
+                        size="sm"
+                        fullWidth
+                        onClick={() => router.push(`/messages/${conv._id}`)}
+                      >
+                        View Request
+                      </Button>
+                    </div>
+                  ))}
+                  {activeConversations.slice(0, 3).map((conv) => (
+                    <div key={conv._id} className="border rounded-lg p-3">
+                      <div className="flex justify-between items-start mb-1">
+                        <p className="text-sm font-medium text-gray-900">
+                          {conv.otherParticipant?.username}
+                        </p>
+                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-success text-white">
+                          Active
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-600 mb-2">
+                        Last message: {new Date(conv.lastMessageAt).toLocaleDateString()}
+                      </p>
+                      <Button 
+                        variant="mentor" 
+                        size="sm"
+                        fullWidth
+                        onClick={() => router.push(`/messages/${conv._id}`)}
+                      >
+                        Open Chat
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </Card>
           </div>
         </div>
