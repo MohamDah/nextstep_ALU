@@ -5,6 +5,7 @@ import { Card } from '../../components/ui';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useCourses } from '@/hooks/useCourses';
 import CourseCard from './CourseCard';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 function CoursesContent() {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -83,7 +84,7 @@ function CoursesContent() {
 
         {isLoading && (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-nextstep-primary mx-auto mb-4"></div>
+            <LoadingSpinner />
             <p className="text-gray-600">Loading courses...</p>
           </div>
         )}

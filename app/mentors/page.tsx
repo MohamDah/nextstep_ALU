@@ -7,6 +7,7 @@ import { useConversations } from '@/hooks/useConversations';
 import { useUser } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { Dialog, DialogPanel, DialogTitle, Description } from '@headlessui/react';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function MentorsPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -65,7 +66,7 @@ export default function MentorsPage() {
   if (isLoading) {
     return (
       <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-nextstep-primary mx-auto mb-4"></div>
+        <LoadingSpinner />
         <p className="text-gray-600">Loading mentors...</p>
       </div>
     );

@@ -7,6 +7,7 @@ import { useConversations } from '@/hooks/useConversations';
 import { useRouter } from 'next/navigation';
 import MyCourseCard from './_components/MyCourseCard';
 import { useRecentActivity } from './utils';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 function LearnerDashboardContent() {
   const router = useRouter();
@@ -66,7 +67,7 @@ function LearnerDashboardContent() {
             
             {isLoading && (
               <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-nextstep-primary mx-auto mb-2"></div>
+                <LoadingSpinner />
                 <p className="text-gray-600 text-sm">Loading your courses...</p>
               </div>
             )}
@@ -111,7 +112,7 @@ function LearnerDashboardContent() {
               <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
               {isLoading ? (
                 <div className="text-center py-4">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-nextstep-primary mx-auto"></div>
+                  <LoadingSpinner />
                 </div>
               ) : recentActivities.length > 0 ? (
                 <div className="space-y-3">

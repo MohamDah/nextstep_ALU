@@ -11,6 +11,7 @@ import { handleDownload } from '@/lib/api/handleDownload';
 import CourseProgress from './_components/CourseProgress';
 import { generateCertificate } from '@/lib/generateCertificate';
 import { useUser } from '@/hooks/useAuth';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function CourseDetailPage() {
   const params = useParams();
@@ -61,7 +62,7 @@ export default function CourseDetailPage() {
   if (isLoading) {
     return (
       <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-nextstep-primary mx-auto mb-4"></div>
+        <LoadingSpinner />
         <p className="text-gray-600">Loading course details...</p>
       </div>
     );

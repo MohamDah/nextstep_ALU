@@ -6,6 +6,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { useConversations } from '@/hooks/useConversations';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/hooks/useAuth';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 function MentorDashboardContent() {
   const { data: conversations, isLoading } = useConversations();
@@ -24,7 +25,7 @@ function MentorDashboardContent() {
   if (isLoading) {
     return (
       <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-nextstep-primary mx-auto mb-4"></div>
+        <LoadingSpinner />
         <p className="text-gray-600">Loading dashboard...</p>
       </div>
     );
