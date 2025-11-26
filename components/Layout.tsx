@@ -51,7 +51,7 @@ const Layout: React.FC<LayoutProps> = ({
         <nav className="bg-nextstep-primary text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex space-x-8">
-              <Link href="/" className="px-3 py-4 text-sm font-medium hover:bg-nextstep-primary-dark transition-colors">
+              <Link href={`/dashboard/${userRole}`} className="px-3 py-4 text-sm font-medium hover:bg-nextstep-primary-dark transition-colors">
                 Dashboard
               </Link>
               <Link href="/courses" className="px-3 py-4 text-sm font-medium hover:bg-nextstep-primary-dark transition-colors">
